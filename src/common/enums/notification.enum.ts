@@ -1,0 +1,32 @@
+/**
+ * Notification Template Types
+ */
+export enum NotificationTemplateType {
+  // Customer templates
+  LOW_WALLET_BALANCE = 'LOW_WALLET_BALANCE',
+  ORDER_PLACED = 'ORDER_PLACED',
+  ORDER_DELIVERED = 'ORDER_DELIVERED',
+  SUBSCRIPTION_ENDING_ALERT = 'SUBSCRIPTION_ENDING_ALERT',
+  ORDER_OUT_FOR_DELIVERY = 'ORDER_OUT_FOR_DELIVERY',
+  
+  // Delivery Partner templates
+  NEW_ORDER_ASSIGNED = 'NEW_ORDER_ASSIGNED',
+  NEW_SUBSCRIPTION_ASSIGNED = 'NEW_SUBSCRIPTION_ASSIGNED',
+  ORDER_ACCEPTED = 'ORDER_ACCEPTED',
+  
+  // Custom (admin-sent)
+  CUSTOM_ADMIN = 'CUSTOM_ADMIN',
+}
+
+export enum NotificationChannel {
+  EMAIL = 'EMAIL',
+  FCM = 'FCM',
+  BOTH = 'BOTH',
+}
+
+export enum RecipientType {
+  CUSTOMER = 'CUSTOMER',
+  DELIVERY_PARTNER = 'DELIVERY_PARTNER',
+  ALL_CUSTOMERS = 'ALL_CUSTOMERS',
+  ALL_DELIVERY_PARTNERS = 'ALL_DELIVERY_PARTNERS',
+}
