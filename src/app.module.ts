@@ -8,12 +8,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotificationTemplate } from './notification/entities/notification-template.entity';
 import { MicroservicesModule } from './microservices/microservices.module';
+import { getConfigModuleOptions } from './config/load-env';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(getConfigModuleOptions()),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
