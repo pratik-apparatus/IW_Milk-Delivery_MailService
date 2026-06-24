@@ -37,9 +37,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  const port = process.env.PORT;
-  const msHost = process.env.MS_HOST;
-  const msPort = Number(process.env.MS_PORT);
+  const port = Number(process.env.PORT || 6026);
+  const msHost = process.env.MS_HOST || '0.0.0.0';
+  const msPort = Number(process.env.MS_PORT || 4003);
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,

@@ -15,5 +15,5 @@ ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY package*.json ./
-EXPOSE 4002 4003
+EXPOSE 6026 4003
 CMD ["node", "dist/main.js"]
