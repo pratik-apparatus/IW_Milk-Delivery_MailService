@@ -5,6 +5,7 @@ interface SendPasswordResetEmailDto {
   to: string;
   resetToken: string;
   frontendUrl?: string;
+  resetPath?: string;
 }
 
 interface SendTenantCredentialsDto {
@@ -27,7 +28,7 @@ export class MailController {
     @Body() dto: SendPasswordResetEmailDto,
   ): Promise<{ success: boolean; message: string }> {
     try {
-      const { to, resetToken, frontendUrl } = dto;
+      const { to, resetToken, frontendUrl, resetPath } = dto;
 
       if (!to || !resetToken) {
         throw new HttpException(
@@ -43,6 +44,7 @@ export class MailController {
         to,
         resetToken,
         frontendUrl,
+        resetPath,
       });
 
       return {

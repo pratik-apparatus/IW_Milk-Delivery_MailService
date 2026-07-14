@@ -5,6 +5,7 @@ export interface SendPasswordResetEmailParams {
   to: string;
   resetToken: string;
   frontendUrl?: string;
+  resetPath?: string;
 }
 
 @Injectable()
@@ -69,8 +70,13 @@ export class MailService {
     to,
     resetToken,
     frontendUrl = process.env.FRONTEND_URL || 'http://localhost:7000',
+    resetPath = '/auth/reset-password',
   }: SendPasswordResetEmailParams): Promise<void> {
-    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+    this.assertEmailConfigured();
+
+    const base = frontendUrl.replace(/\/$/, '');
+    const path = resetPath.startsWith('/') ? resetPath : `/${resetPath}`;
+    const resetLink = `${base}${path}?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER || 'noreply@milkdelivery.com',
