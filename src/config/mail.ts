@@ -6,9 +6,9 @@ dotenv.config();
 
 const { EMAIL_USER, EMAIL_PASS } = process.env;
 
-const hasCreds = Boolean(EMAIL_USER && EMAIL_PASS);
+export const hasEmailCredentials = Boolean(EMAIL_USER && EMAIL_PASS);
 
-export const transporter = hasCreds
+export const transporter = hasEmailCredentials
   ? nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -19,7 +19,7 @@ export const transporter = hasCreds
   : nodemailer.createTransport({ jsonTransport: true }); // fallback to avoid runtime crash
 
 // Verify transport only when real creds exist; otherwise warn once.
-if (hasCreds) {
+if (hasEmailCredentials) {
   transporter.verify((error: Error | null) => {
     if (error) {
       console.error('Nodemailer error:', error);
@@ -28,5 +28,7 @@ if (hasCreds) {
     }
   });
 } else {
-  console.warn('EMAIL_USER/EMAIL_PASS not set. Emails will be logged to console (jsonTransport).');
+  console.warn(
+    'EMAIL_USER/EMAIL_PASS not set. Emails will NOT be delivered (jsonTransport only).',
+  );
 }

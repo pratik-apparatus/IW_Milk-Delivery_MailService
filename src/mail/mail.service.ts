@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { transporter } from '../config/mail';
+import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { hasEmailCredentials, transporter } from '../config/mail';
 
 export interface SendPasswordResetEmailParams {
   to: string;
@@ -9,6 +9,16 @@ export interface SendPasswordResetEmailParams {
 
 @Injectable()
 export class MailService {
+  private readonly logger = new Logger(MailService.name);
+
+  private assertEmailConfigured() {
+    if (!hasEmailCredentials) {
+      throw new ServiceUnavailableException(
+        'Mail service is not configured. Set EMAIL_USER and EMAIL_PASS (Gmail app password) so tenant credentials can be delivered.',
+      );
+    }
+  }
+
   async sendTenantCredentialsEmail(params: {
     to: string;
     businessName: string;
@@ -17,6 +27,8 @@ export class MailService {
     adminPanelUrl?: string;
     subdomain?: string;
   }): Promise<void> {
+    this.assertEmailConfigured();
+
     const adminPanelUrl =
       params.adminPanelUrl ||
       process.env.ADMIN_PANEL_URL ||
@@ -39,7 +51,18 @@ export class MailService {
       text: `Tenant ${params.businessName} is ready. Admin: ${params.adminEmail}. Temp password: ${params.temporaryPassword}. Login: ${adminPanelUrl}`,
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      this.logger.log(
+        `Tenant credentials email sent to ${params.to} (messageId=${info.messageId})`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to send tenant credentials email to ${params.to}`,
+        error instanceof Error ? error.stack : undefined,
+      );
+      throw new Error('Failed to send tenant credentials email');
+    }
   }
 
   async sendPasswordResetEmail({
