@@ -30,6 +30,7 @@ export class MailMicroserviceController {
       to: string;
       resetToken: string;
       frontendUrl?: string;
+      resetPath?: string;
     }>,
   ) {
     this.validate(envelope);
